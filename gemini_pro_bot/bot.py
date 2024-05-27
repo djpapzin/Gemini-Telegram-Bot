@@ -1,4 +1,5 @@
 import os
+import logging
 from telegram import Update
 from telegram.ext import (
     CommandHandler,
@@ -17,9 +18,18 @@ from gemini_pro_bot.handlers import (
 
 load_dotenv()
 
+# Set up basic logging configuration
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+
+logger = logging.getLogger(__name__)
 
 def start_bot() -> None:
     """Start the bot."""
+    logger.info("Starting the bot...")
+
     # Create the Application and pass it your bot's token.
     application = Application.builder().token(os.getenv("BOT_TOKEN")).build()
 
@@ -35,4 +45,5 @@ def start_bot() -> None:
     application.add_handler(MessageHandler(PhotoFilter, handle_image))
 
     # Run the bot until the user presses Ctrl-C
+    logger.info("Bot is running. Press Ctrl-C to stop.")
     application.run_polling(allowed_updates=Update.ALL_TYPES)
